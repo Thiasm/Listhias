@@ -1,0 +1,21 @@
+<div class='flex justify-center flex-col relative'>
+    <!-- Title -->
+    <h1 id="add-item-title" class="pb-3 font-bold text-center text-lg text-gray-800">Add Item</h1>
+
+    <!-- Search Input -->
+    <form
+        hx-get="{% url 'search_items' category %}"
+        hx-trigger="input delay:500ms"
+        hx-target="#search-results"
+    >
+        {% csrf_token %}
+        <input
+            name="item_title"
+            id='item-title'
+            type="text"
+            placeholder="Search for an item..."
+            class="rounded px-4 py-2 border w-full"
+        >
+    </form>
+    <div id="search-results"></div>
+</div>

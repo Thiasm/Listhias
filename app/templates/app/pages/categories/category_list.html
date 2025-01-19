@@ -1,0 +1,9 @@
+<ul id='category-list' class='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-16'>
+    {% for category in categories %}
+        {% include "app/pages/categories/category.html" %}
+    {% empty %}
+        <h1 class="text-gray-800 font-bold text-base">
+            No Category available
+        </h1>
+    {% endfor %}
+</ul>

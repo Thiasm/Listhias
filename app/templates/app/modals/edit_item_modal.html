@@ -1,0 +1,114 @@
+{% load custom_filters %}
+<div id="edit-item-modal" name ="edit_item_modal" class="relative space-y-4">
+    <!-- Item Title -->
+    <h1 id="edit-item-title" class="font-bold text-center mb-4 text-lg text-gray-800">
+        <text>{{  item.title|split:"("|first }}</text>
+    </h1>
+
+    <form
+        hx-post="{% url 'edit_item' category item.id %}"
+        hx-target="#item-{{ item.id }}"
+        hx-swap="outerHTML"
+        class="space-y-4"
+    >
+        {% csrf_token %}
+        <!-- Item Grade and Release Year -->
+        <div class='flex flex-start items-center text-gray-500 text-sm'>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 mr-1">
+                <path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z"/>
+            </svg>
+            {{ item.grade|floatformat:1 }}
+
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"  stroke="currentColor" class="w-4 h-4 ml-4 mr-1">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+            </svg>
+            {{ item.release_year }}
+        </div>
+
+        <!-- Item Description -->
+        <div class='flex flex-col'>
+            <label for="item-description" class="block text-sm font-medium text-gray-700 pb-2">Description: </label>
+            <text
+                id="item-description"
+                name="item_description"
+                class="w-full block pl-3 text-sm text-gray-600"
+            >{{ item.description }}</text>
+        </div>
+
+        <!-- Item Complete Checkbox -->
+        <label class="flex items-center relative inline-flex cursor-pointer">
+            <input
+                id="item-complete"
+                name="item_complete"
+                type="checkbox"
+                class='ml-3 peer sr-only'
+                hx-get="{% url 'display_rate' category item.id %}"
+                hx-target="#edit-item-modal"
+                hx-swap="innerHTML"
+                hx-trigger="change"
+                hx-vals='{"item_complete": this.checked}'
+                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                {% if checkbox_checked %}checked{% endif %}
+            />
+            <div class="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-slate-800 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
+            <label for="item-complete" class="text-sm font-medium text-gray-700 ml-2">Watched</label>
+        </label>
+
+        <!-- Item grade -->
+        {% if checkbox_checked %}
+            <div class="flex flex-col space-y-4">
+                <div>
+                    <label for="item-note" class="block text-sm font-medium text-gray-700 pb-2">Note: </label>
+                    <textarea
+                        id="item-note"
+                        name="item_note"
+                        class="w-full border rounded px-2 py-2"
+                        placeholder="Add a note..."
+                    >{{ item.user_note }}</textarea>
+                </div>
+                {% include "app/partials/rate_item.html" %}
+            </div>
+        {% endif %}
+
+        <div class="flex justify-center mt-6 space-x-8">
+            <!-- Delete Button -->
+            <button
+                type='button'
+                onclick="closeModal()"
+                aria-label="Delete Item"
+                hx-delete="{% url 'delete_item' category item.id %}"
+                hx-target="#item-list"
+                hx-swap="outerHTML"
+                hx-confirm="Are you sure ?"
+                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                class="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded"
+            >
+                Delete
+            </button>
+
+            <!-- Item API Link -->
+            {% if item.api_id %}
+                <div class="flex items-center justify-center">
+                    <button
+                        class="bg-gray-600 hover:bg-gray-800 text-white py-2 px-4 rounded"
+                        onclick="window.open('https://www.themoviedb.org/movie/{{ item.api_id }}', '_blank')"
+                    >
+                        View on API
+                    </button>
+                </div>
+            {% endif %}
+
+
+            <!-- Save Button -->
+            <button
+                type='submit'
+                onclick="closeModal()"
+                class="bg-teal-700 hover:bg-teal-900  text-white py-2 px-4 rounded"
+                aria-label="Save Item"
+            >
+                Save
+            </button>
+        </div>
+    </form>
+</div>
+

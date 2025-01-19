@@ -1,0 +1,79 @@
+<div class="p-3 relative">
+    <h1 id="edit-task-title" class="font-bold text-center mb-4 text-lg text-gray-800">Edit Task</h1>
+
+    <form
+        hx-post="{% url 'edit_task' category item.id %}"
+        hx-target="#task-{{ item.id }}"
+        hx-swap="outerHTML"
+        class="space-y-4"
+    >
+        {% csrf_token %}  
+        <!-- task Title -->
+        <div>
+            <label for="task-title" class="text-sm font-medium text-gray-700">Title</label>
+            <input
+                id="task-title"
+                name="task_title"
+                class="w-full border rounded px-2 py-2"
+                type="text"
+                value="{{ item.title }}"
+                required
+            />
+        </div>  
+
+        <!-- task Description -->
+        <div>
+            <label for="task-description" class="block text-sm font-medium text-gray-700">Description</label>
+            <textarea
+                id="task-description"
+                name="task_description"
+                class="w-full border rounded px-2 py-1"
+                rows="4"
+            >{{ item.description }}</textarea>
+        </div>
+
+        <!-- task Complete Checkbox -->
+        <label class="flex items-center relative inline-flex cursor-pointer">
+            <input
+                id="task-complete"
+                name="task_complete"
+                type="checkbox"
+                class='ml-3 peer sr-only'
+                
+                {% if item.complete %}checked{% endif %}
+            />
+            <div class="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-slate-800 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
+            <label for="task-complete" class="text-sm font-medium ml-2 text-gray-700">Complete</label>
+        </label>
+
+
+        <!-- Action Buttons -->
+        <div class="flex justify-center mt-6 space-x-6">
+
+            <!-- Delete Button -->
+           <button
+                type='button'
+                onclick="closeModal()"
+                aria-label="Delete task"
+                hx-delete="{% url 'delete_item' category item.id %}"
+                hx-target="#task-list"
+                hx-swap="outerHTML"
+                hx-confirm="Are you sure ?"
+                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                class="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded"
+            >
+                Delete
+            </button>
+
+            <!-- Save Button -->
+            <button
+                type='submit'
+                onclick="closeModalIfNotEmpty('task-title')"
+                class="bg-gray-600 hover:bg-gray-800 text-white py-2 px-4 rounded"
+                aria-label="Save task"
+            >
+                Save
+            </button>
+        </div>
+    </form>
+</div>
