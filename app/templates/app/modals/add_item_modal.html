@@ -7,8 +7,14 @@
         hx-get="{% url 'search_items' category %}"
         hx-trigger="input delay:500ms"
         hx-target="#search-results"
+        hx-swap="innerHTML"
     >
         {% csrf_token %}
+
+        <div id="error-content">
+            <!-- Error message -->
+        </div>
+
         <input
             name="item_title"
             id='item-title'
@@ -17,5 +23,9 @@
             class="rounded px-4 py-2 border w-full"
         >
     </form>
-    <div id="search-results"></div>
+
+    <div id="search-results" class="mt-4 bg-gray-100">
+        <!-- Search Results -->
+    </div>
+
 </div>

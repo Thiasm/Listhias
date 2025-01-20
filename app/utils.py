@@ -1,5 +1,8 @@
-import os
 import requests
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 class Utils:
 
@@ -43,8 +46,7 @@ class ApiRequest:
 
     @staticmethod
     def fetch_animes(base_url, query):
-        # clientSecret = '3cb749a8eb2b058a8513292aff3e6cc39746d220cbd99d6ec593a813dff7937e'
-        clientId = os.environ.get('API_KEY_ANIME_LIST')
+        clientId = os.environ.get('CLIENT_ID_ANIMELIST')
         query = "'" + query + "'"
         fields = "id,title,synopsis,mean,start_date,end_date,num_episodes"
         url = '{}?q={}&limit={}&fields={}'.format(base_url, query, 5, fields)
@@ -71,8 +73,7 @@ class ApiRequest:
 
     @staticmethod
     def fetch_anime_details(item_id, base_url):
-        # clientSecret = '3cb749a8eb2b058a8513292aff3e6cc39746d220cbd99d6ec593a813dff7937e'
-        clientId = 'b1bad1804f4283e7c95c111bda12a611'
+        clientId = os.environ.get('API_KEY_ANIMELIST')
         fields = "id,title,synopsis,mean,start_date,end_date,num_episodes"
         url = '{}/{}?fields={}'.format(base_url, item_id, fields)
         headers = {
@@ -97,7 +98,7 @@ class ApiRequest:
     def fetch_movies(base_url, query):
         url = "{}/search/movie?query={}".format(base_url, query)
         headers = {
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5ZWU3ZWM2NTQwZTMyNzE0N2U5NTFkNmYxNmQ1YzZiMiIsIm5iZiI6MTczNjI3NDYzNS45MzI5OTk4LCJzdWIiOiI2NzdkNzJjYjgxN2QzNTZhMWE3MjZiYzciLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.A3a4QbmFwCAPRgCLmVDFWW3XvUfiMfiPm8YYk2MsXRQ'
+            'Authorization': 'Bearer {}'.format(os.environ.get('CLIENT_ID_MOVIE_DB'))
         }
 
         response = requests.get(url, headers=headers)
@@ -123,9 +124,8 @@ class ApiRequest:
     def fetch_movie_details(item_id, base_url):
         url = base_url + '/movie/{}'.format(item_id)
         headers = {
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5ZWU3ZWM2NTQwZTMyNzE0N2U5NTFkNmYxNmQ1YzZiMiIsIm5iZiI6MTczNjI3NDYzNS45MzI5OTk4LCJzdWIiOiI2NzdkNzJjYjgxN2QzNTZhMWE3MjZiYzciLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.A3a4QbmFwCAPRgCLmVDFWW3XvUfiMfiPm8YYk2MsXRQ'
+            'Authorization': 'Bearer {}'.format(os.environ.get('CLIENT_ID_MOVIE_DB'))
         }
-        print(url)
         response = requests.get(url, headers=headers)
         if response and response.status_code == 200:
             json_data = response.json()
@@ -146,9 +146,8 @@ class ApiRequest:
     def fetch_tv_shows(base_url, query):
         url = "{}/search/tv?query={}".format(base_url, query)
         headers = {
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5ZWU3ZWM2NTQwZTMyNzE0N2U5NTFkNmYxNmQ1YzZiMiIsIm5iZiI6MTczNjI3NDYzNS45MzI5OTk4LCJzdWIiOiI2NzdkNzJjYjgxN2QzNTZhMWE3MjZiYzciLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.A3a4QbmFwCAPRgCLmVDFWW3XvUfiMfiPm8YYk2MsXRQ'
+            'Authorization': 'Bearer {}'.format(os.environ.get('CLIENT_ID_MOVIE_DB'))
         }
-
         response = requests.get(url, headers=headers)
         if response and response.status_code == 200:
             json_data = response.json()
@@ -172,10 +171,8 @@ class ApiRequest:
     def fetch_tv_show_details(item_id, base_url):
         url = '{}/tv/{}'.format(base_url, item_id)
         headers = {
-            "accept": "application/json",
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5ZWU3ZWM2NTQwZTMyNzE0N2U5NTFkNmYxNmQ1YzZiMiIsIm5iZiI6MTczNjI3NDYzNS45MzI5OTk4LCJzdWIiOiI2NzdkNzJjYjgxN2QzNTZhMWE3MjZiYzciLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.A3a4QbmFwCAPRgCLmVDFWW3XvUfiMfiPm8YYk2MsXRQ'
+            'Authorization': 'Bearer {}'.format(os.environ.get('CLIENT_ID_MOVIE_DB'))
         }
-
         response = requests.get(url, headers=headers)
         if response and response.status_code == 200:
             json_data = response.json()

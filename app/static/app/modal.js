@@ -1,8 +1,11 @@
 function openModal() {
-    console.log('Open Modal')
     const modal = document.getElementById("modal");
-    modal.classList.add("show");
     modal.classList.remove("hidden");
+}
+
+function closeModal() {
+    const modal = document.getElementById("modal");
+    modal.classList.add("hidden");
 }
 
 function openDropdownMenu() {
@@ -32,27 +35,5 @@ function closeDropdownMenuOnClickOutside(event) {
         dropdownMenu.classList.add('hidden');
         document.removeEventListener('click', closeDropdownMenuOnClickOutside);
         dropdownButton.classList.remove('bg-gray-300');
-    }
-}
-
-function closeModal() {
-    const modal = document.getElementById("modal");
-    modal.classList.add("hidden");
-    modal.classList.remove("show");
-}
-
-function closeModalOnOutsideClick(event) {
-    const modalContent = document.getElementById('modal-content');
-
-    if (!modalContent.contains(event.target) && !event.target.closest('.modal-content')) {
-        closeModal();
-    } 
-}
-
-function closeModalIfNotEmpty(inputId) {
-    const inputField = document.getElementById(inputId);
-
-    if (inputField.value != "") {
-        closeModal(); 
     }
 }

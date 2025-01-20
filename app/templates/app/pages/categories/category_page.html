@@ -12,8 +12,9 @@
                 {% include "app/partials/search.html" with category_item='category' %}
             </div>
         </div>
-        <div class='pt-8 flex justify-center'>
+        <div class='p-8 flex justify-center w-full'>
             {% include "app/pages/categories/category_list.html" %}
         </div>
+        <div id="error-message" class='fixed bottom-1 w-full'></div>
     </div>
 {% endblock %}

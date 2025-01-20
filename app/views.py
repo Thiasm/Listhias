@@ -34,13 +34,20 @@ class CategoryList(ListView):
 def add_category(request):
     if request.method == 'GET':
         return render(request, 'app/modals/add_category_modal.html', { 'category_types': Category.CategoryTypes })
+    
     if request.method == 'POST':
         category_type = request.POST.get('category_type')
         category_title = request.POST.get('category_title')
         if Category.objects.filter(title = category_title).exists():
-            return render(request, 'app/error/error_badge.html', { 'error_message': 'Category already exists.' })
+            # Update target to error badge
+            return_view = render(request, 'app/error/error_badge.html', { 'error_message': 'Category already exists.' })
+            return_view['HX-Retarget'] = '#error-content'
+            return return_view
         Category.objects.create(title = category_title, type = category_type)
-        return JsonResponse({}, headers={"HX-Redirect": reverse("categories")})
+        categories = Category.objects.order_by('-created')
+        result = render(request, 'app/pages/categories/category_list.html', { 'categories': categories })
+        result['HX-Trigger'] = "closeModal"
+        return result
     return JsonResponse({"error": "Invalid request."}, status=400)
 
 @require_http_methods(['GET', 'POST'])
@@ -48,18 +55,22 @@ def edit_category(request, category):
     category = get_object_or_404(Category, title = category)
     if request.method == 'GET':
         return render(request, 'app/modals/edit_category_modal.html', { 'category': category })
+
     if request.method == 'POST':
         category_title = request.POST.get('category_title')
         if Category.objects.filter(title = category_title).exists():
             return render(request, 'app/error/error_badge.html', { 'error_message': 'Category already exists.' })
         category.title = category_title
         category.save()
-        return JsonResponse({"success": True}, headers={"HX-Redirect": reverse("items", kwargs={'category': category})})
+        # Reload page with updated category
+        return JsonResponse({"success": True}, headers={"HX-Redirect": reverse("items", args=[category])})
+    return JsonResponse({"error": "Invalid request."}, status=400)
 
 @require_http_methods(['DELETE'])
 def delete_category(request, category):
     category = get_object_or_404(Category, title = category)
     category.delete()
+    # Reload page in category list
     return JsonResponse({"success": True}, headers={"HX-Redirect": reverse("categories")})
 
 class ItemList(ListView):
@@ -88,7 +99,6 @@ class ItemList(ListView):
         queryset = super().get_queryset()
         return self.filter_queryset(queryset)
 
-    # WHAT IS CONTEXT ?
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         category = get_object_or_404(Category, title=self.kwargs.get("category"))
@@ -125,36 +135,33 @@ def add_note(request, category, id):
 @require_http_methods(['GET'])
 def display_rate(request, id, category):
     item = get_object_or_404(Item, id=id)
-    if request.method == 'GET':
-        checkbox_checked = request.GET.get("item_complete")
-        return render(request, "app/modals/edit_item_modal.html" , {
-                'category': category,
-                'item': item,
-                'checkbox_checked': checkbox_checked, 
-                'stars_range': range(1, 6)
-            })
+    checkbox_checked = request.GET.get("item_complete")
+    return render(request, "app/modals/edit_item_modal.html" , {
+            'category': category,
+            'item': item,
+            'checkbox_checked': checkbox_checked, 
+            'stars_range': range(1, 6)
+        })
 
 @require_http_methods(['POST'])
 def rate_item(request, id, category):
     item = get_object_or_404(Item, id=id)
-    if request.method == 'POST':
-        rating = request.POST.get('rating')
-        item.user_grade = int(rating)
-        item.save()
-        return render(request, "app/partials/rate_item.html" , {
-            'stars_range': range(1, 6),
-            'category': category,
-            'item': item
-        })
+    rating = request.POST.get('rating')
+    item.user_grade = int(rating)
+    item.save()
+    return render(request, "app/partials/rate_item.html" , {
+        'stars_range': range(1, 6),
+        'category': category,
+        'item': item
+    })
 
 @require_http_methods(['POST'])
 def add_task(request, category):
     category = get_object_or_404(Category, title=category)
-    if request.method == 'POST':
-        item_title = request.POST.get('task_title')
-        Item.objects.create(title = item_title, category=category)
-        items = Item.objects.filter(category=category)
-        return render(request, 'app/pages/tasks/task_list.html', {'items': items, 'category': category})
+    item_title = request.POST.get('task_title')
+    Item.objects.create(title = item_title, category=category)
+    items = Item.objects.filter(category=category)
+    return render(request, 'app/pages/tasks/task_list.html', {'items': items, 'category': category})
 
 @require_http_methods(['POST'])
 def complete_task(request, id, category):
@@ -177,12 +184,20 @@ def add_item(request, category):
         item_id = request.POST.get('result_id')
         if not item_id:
             return JsonResponse({"error": "Item ID not provided."}, status=400)
+
+        if Item.objects.filter(category=category, api_id=item_id).exists():
+            response = render(request, 'app/error/error_badge.html', { 'error_message': 'Item already exists.' })
+            response['HX-Retarget'] = "#error-content"
+            return response
+            
         item_data = Utils.fetch_and_prepare_item_data(item_id, category)
         if not item_data:
             return JsonResponse({"error": "Failed to fetch item data."}, status=400)
         Item.objects.create(**item_data)
         items = Item.objects.filter(category=category)
-        return render(request, f'app/pages/items/item_list.html', {'items': items, 'category': category})
+        response = render(request, 'app/pages/items/item_list.html', {'items': items, 'category': category })
+        response['HX-Trigger'] = "closeModal"
+        return response
 
 @require_http_methods(['DELETE'])
 def delete_item(request, id, category):

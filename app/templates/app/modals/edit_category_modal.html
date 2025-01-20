@@ -3,7 +3,7 @@
 
     <form
         hx-post="{% url 'edit_category' category %}"
-        hx-target="#error-message"
+        hx-target="#error-content"
         hx-swap="innerHTML"
         class="space-y-4"
     >
@@ -27,7 +27,6 @@
             <!-- Delete Button -->
            <button
                 type='button'
-                onclick="closeModal()"
                 aria-label="Delete category"
                 hx-delete="{% url 'delete_category' category %}"
                 hx-target="#base-list"
@@ -42,7 +41,6 @@
             <!-- Save Button -->
             <button
                 type='submit'
-                {% comment %} onclick="closeModalIfNotEmpty('category-title')" {% endcomment %}
                 class="bg-gray-600 hover:bg-gray-800 text-white py-2 px-4 rounded"
                 aria-label="Save category"
             >
@@ -50,5 +48,7 @@
             </button>
         </div>
     </form>
-    <div id="error-message"></div>
+    <div id="error-content">
+        <!-- Error message -->
+    </div>
 </div>

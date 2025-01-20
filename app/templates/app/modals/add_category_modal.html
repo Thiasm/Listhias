@@ -1,11 +1,10 @@
 <div> 
-    <!-- Title -->
     <h1 id="add-category-title" class="font-bold text-center text-lg text-gray-800">Add category</h1>
 
     <form
         id="add-category-form"
         hx-post="{% url 'add_category' %}"
-        hx-target="#error-message"
+        hx-target="#category-list"
         hx-swap="innerHTML"
     >
         {% csrf_token %}
@@ -35,7 +34,7 @@
             </button>
         </div>
     </form>
-
-    <div id="error-message"></div>
-
+    <div id="error-content">
+        <!-- Error message -->
+    </div>
 </div>
