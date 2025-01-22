@@ -1,9 +1,10 @@
+{% load static %}
 <div
     id="modal"
     class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start pt-12 hidden"
     onclick="handleOutsideClick(event)"
 >
-    <div id='modal-container' class="bg-white rounded-lg p-6 max-w-lg w-full relative">
+    <div id='modal-container' class="bg-white rounded-lg p-4 max-w-lg w-full relative">
 
         <!-- Close Button -->    
         <button
@@ -11,9 +12,7 @@
             aria-label="Close Modal"
             onclick="closeModal()"
         >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-            </svg>
+            <image src="{% static 'images/cross.svg' %}" class="h-6 w-6" />
         </button>
 
         <div id="modal-content" class="p-3">

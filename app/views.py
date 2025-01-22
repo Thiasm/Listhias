@@ -132,14 +132,18 @@ def add_note(request, category, id):
     item = get_object_or_404(Item, id=id)
     return render(request, 'app/modals/add_note_modal.html', { 'category': category, 'item': item })
 
-@require_http_methods(['GET'])
+@require_http_methods(['POST'])
 def display_rate(request, id, category):
     item = get_object_or_404(Item, id=id)
-    checkbox_checked = request.GET.get("item_complete")
+    checkbox_checked = request.POST.get("item_complete")
+    if checkbox_checked == 'true':
+        checkbox_checked = True
+    elif checkbox_checked == 'false':
+        checkbox_checked = False
     return render(request, "app/modals/edit_item_modal.html" , {
             'category': category,
             'item': item,
-            'checkbox_checked': checkbox_checked, 
+            'checkbox_checked': checkbox_checked,
             'stars_range': range(1, 6)
         })
 

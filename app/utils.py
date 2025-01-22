@@ -73,7 +73,7 @@ class ApiRequest:
 
     @staticmethod
     def fetch_anime_details(item_id, base_url):
-        clientId = os.environ.get('API_KEY_ANIMELIST')
+        clientId = os.environ.get('CLIENT_ID_ANIMELIST')
         fields = "id,title,synopsis,mean,start_date,end_date,num_episodes"
         url = '{}/{}?fields={}'.format(base_url, item_id, fields)
         headers = {
@@ -138,7 +138,6 @@ class ApiRequest:
                 'grade': results.get('vote_average'),
                 'release_year': Utils.format_release_date(results.get('release_date')),
             }
-            print(movie)
             return movie
         return None
 

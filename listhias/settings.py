@@ -1,29 +1,22 @@
 from pathlib import Path
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-rk&#ssi-!3!udbjo=x427@ue3w3s5e13mu7^&iy^l9sw3@_ni$'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# Les Images chargent plus vite en mode debug
+DEBUG = os.environ.get('DEBUG')
 
-INTERNAL_IPS = [
-    "127.0.0.1",
-]
-
-ALLOWED_HOSTS = [
-    '127.0.0.1',
-    '.localhost',
-]
-
-TAILWIND_APP_NAME = 'theme'
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS").split(",")
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -61,10 +54,6 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
-
-            # 'library': {
-            #     'custom_filters': 'app.templatetags.custom_filters',
-            # }
         },
     },
 ]
@@ -117,11 +106,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'app/static/'
+# URL accessible via le navigateur pour les fichiers statiques -> en prod static = static_url
+STATIC_URL = '/static/'
 
+# Répertoire où collecter tous les fichiers statiques pour la production
+# collectstatic copie les fichiers statiques dans ce repertoire
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Répertoires supplémentaires contenant des fichiers statiques pendant le développement
+# collectstatic collecte les fichiers statiques de ces repertoires
 STATICFILES_DIRS = [
-    BASE_DIR / "app/static/app",
-    BASE_DIR / "app/static/images"
+    os.path.join(BASE_DIR, 'app', 'static'),
 ]
 
 # Default primary key field type
