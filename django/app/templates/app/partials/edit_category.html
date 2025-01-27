@@ -1,0 +1,14 @@
+<form
+    hx-get="{% url 'edit_category' category %}"
+    hx-target="#modal-content"
+    hx-swap="innerHTML"
+    hx-on="htmx:afterRequest:openModal()"
+>
+    {% csrf_token %}
+    <button 
+        type="submit"
+        class='rounded font-bold bg-gray-800 hover:bg-gray-900 text-white px-6 py-3'
+    >
+        Edit Category
+    </button>
+</form>

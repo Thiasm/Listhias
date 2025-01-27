@@ -1,0 +1,28 @@
+{% load custom_filters %}
+{% load static %}
+<li 
+    id="item-{{ item.id }}"
+    class="flex flex-col shadow-lg rounded-lg hover:bg-gray-300 hover:opacity-70 border"
+>
+    <button
+        hx-get="{% url 'edit_item' category item.id %}"
+        hx-target="#modal-content"
+        hx-swap="innerHTML"
+        hx-on="htmx:afterRequest:openModal()"
+        aria-label="Edit item '{{ item.title }}"
+    >
+        <img
+            class='w-full aspect-[3/4] object-cover rounded-t-lg'
+            src={{item.image}}
+            alt="{{ item.title }}"
+        />
+        <div class='flex justify-between pl-5 pr-3 py-3 space-x-3 rounded-b-lg'>
+            <text class='font-bold text-lg text-start w-full'>
+                {{item.title|split:"("|first|truncatechars:55}}
+            </text>
+            {% if item.complete %}
+                <image src="{% static 'images/check.svg' %}" class="h-8 w-8 shrink-0" />
+            {% endif %}
+        </div>
+    </button>
+</li>

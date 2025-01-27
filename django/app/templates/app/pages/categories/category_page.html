@@ -1,0 +1,20 @@
+{% extends "app/base.html" %}
+{% block content %}
+    <div>
+        <div class='flex justify-between items-center p-3 bg-gray-700'>
+            <div class='flex'>
+                {% include "app/partials/add_category.html" %}    
+            </div>
+            <div class='flex'>
+                <h1 class='font-bold text-2xl text-white'>Category</h1>
+            </div>
+            <div class='flex'>
+                {% include "app/partials/search.html" with item_type='category' %}
+            </div>
+        </div>
+        <div class='p-8 flex justify-center w-full'>
+            {% include "app/pages/categories/category_list.html" %}
+        </div>
+        <div id="error-message" class='fixed bottom-1 w-full'></div>
+    </div>
+{% endblock %}

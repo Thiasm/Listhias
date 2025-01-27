@@ -1,0 +1,40 @@
+<div> 
+    <h1 id="add-category-title" class="font-bold text-center text-lg text-gray-800">Add category</h1>
+
+    <form
+        id="add-category-form"
+        hx-post="{% url 'add_category' %}"
+        hx-target="#category-list"
+        hx-swap="innerHTML"
+    >
+        {% csrf_token %}
+        <div class="rounded flex-col flex justify-center space-y-5 mt-5">
+            <select
+                name="category_type"
+                id='category-type'
+                class='rounded border py-2 text-center'
+            >
+                {% for category_type in category_types %}
+                    <option value="{{ category_type }}">{{ category_type.label }}</option>
+                {% endfor %}
+            </select>
+            <input
+                name="category_title"
+                id='category-title'
+                type="text"
+                placeholder="Add a new category"
+                class="rounded px-4 py-2 text-center border w-full"
+                required
+            >
+            <button
+                type="submit"
+                class='rounded p-2 bg-gray-600 hover:bg-gray-800 text-white'
+            >   
+                Add Category
+            </button>
+        </div>
+    </form>
+    <div id="error-content" class="mt-3">
+        <!-- Error message -->
+    </div>
+</div>

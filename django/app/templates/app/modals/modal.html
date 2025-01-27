@@ -1,0 +1,34 @@
+{% load static %}
+<div
+    id="modal"
+    class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start pt-12 hidden"
+    onclick="handleOutsideClick(event)"
+>
+    <div id='modal-container' class="bg-white rounded-lg p-4 max-w-lg w-full relative">
+
+        <!-- Close Button -->    
+        <button
+            class="text-gray-500 hover:text-red-700 rounded absolute top-3 right-3"
+            aria-label="Close Modal"
+            onclick="closeModal()"
+        >
+            <image src="{% static 'images/cross.svg' %}" class="h-6 w-6" />
+        </button>
+
+        <div id="modal-content" class="p-3">
+            <!-- Modal content -->
+        </div>
+    </div>
+</div>
+
+<script>
+    document.body.addEventListener('closeModal', () => {
+        closeModal();
+    });
+
+    function handleOutsideClick(event) {
+        if (event.target.closest('#modal-container') === null) {
+            closeModal();
+        }
+    }
+</script>
