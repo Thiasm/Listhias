@@ -1,6 +1,9 @@
 #!/bin/bash
 
 # Notify the user that the scipt is waiting for MySQL to be ready
+echo "Collecting static files..."
+python manage.py collectstatic --no-input
+
 echo "Waiting for MySQL to be ready..."
 
 # Loop until MySQL is accessible on port 3306

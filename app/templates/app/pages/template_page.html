@@ -1,9 +1,0 @@
-{% extends "app/base.html" %}
-
-{% block content %}
-    {% if item_type == 'task' %}
-        {% include "app/pages/tasks/task_page.html" %}
-    {% else %}
-        {% include "app/pages/items/item_page.html" %}
-    {% endif %}
-{% endblock %}
